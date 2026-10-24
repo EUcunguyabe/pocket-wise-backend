@@ -1,0 +1,438 @@
+{
+  "info": {
+    "name": "PocketWise Midterm",
+    "description": "INSY 8322 PocketWise. Emmelance Ucunguyabe, 27617. One request per requirement, named by its ID. Import and run against http://localhost:8080. The ids match the seed already stored in the pocketwise database.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "A2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/all",
+        "description": "A2 success. 200 and the ten savings goals. Also try A2 missing id for the 404."
+      }
+    },
+    {
+      "name": "A2 missing id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/00000000-0000-0000-0000-000000000000",
+        "description": "A2 error. 404 The savings goal with that id does not exist."
+      }
+    },
+    {
+      "name": "A2 get saver",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savers/0a9b4810-aa83-443c-b2f3-37ef2bb3d187",
+        "description": "A2 success for a saver. 200 and Claire Uwera."
+      }
+    },
+    {
+      "name": "A2 update saver",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/savers/update/0a9b4810-aa83-443c-b2f3-37ef2bb3d187",
+        "description": "A2 update. 200 and the saver. Username stays claire_u.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Claire\",\n  \"lastName\": \"Uwera\",\n  \"username\": \"claire_u\",\n  \"email\": \"claire.uwera@pocketwise.rw\"\n}"
+        }
+      }
+    },
+    {
+      "name": "B1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savers/by-last-name?lastName=uwera",
+        "description": "B1. Claire then Emma. Letter case does not matter."
+      }
+    },
+    {
+      "name": "B1 nobody",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savers/by-last-name?lastName=nobody",
+        "description": "B1 empty list."
+      }
+    },
+    {
+      "name": "B2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/by-status?status=DRAFT",
+        "description": "B2. DRAFT goals, earliest target date first."
+      }
+    },
+    {
+      "name": "B3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/between?start=2026-10-01&end=2026-10-31",
+        "description": "B3. October 2026, both dates included, ordered by target date."
+      }
+    },
+    {
+      "name": "C1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/by-expertise-area?name=invest",
+        "description": "C1. Aline holds Investing. invest matches without caring about letter case."
+      }
+    },
+    {
+      "name": "C2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-circles/free",
+        "description": "C2. Circle 4, the circle with no coach."
+      }
+    },
+    {
+      "name": "C3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/expertise-areas/unused",
+        "description": "C3. Debt Management. The coaches list is empty."
+      }
+    },
+    {
+      "name": "C4",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savers/of-coach/338bdb54-0022-4d8f-a52e-e2deb37e836a",
+        "description": "C4. Emma, Claire and Jean, each once."
+      }
+    },
+    {
+      "name": "C4 missing coach",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savers/of-coach/00000000-0000-0000-0000-000000000000",
+        "description": "C4 error. 404 The coach with that id does not exist."
+      }
+    },
+    {
+      "name": "D1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/savings-goals/save",
+        "description": "D1 success. 201 Savings goal saved successfully. The ACHIEVED value in the body is ignored and the goal is stored as DRAFT. This inserts a row.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetDate\": \"2026-12-10\",\n  \"status\": \"ACHIEVED\",\n  \"title\": \"Year end buffer\",\n  \"targetAmount\": 80000,\n  \"saver\": {\n    \"id\": \"0a9b4810-aa83-443c-b2f3-37ef2bb3d187\"\n  },\n  \"coach\": {\n    \"id\": \"2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "D1 past date",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/savings-goals/save",
+        "description": "D1 error. 400 Savings goal date cannot be in the past.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetDate\": \"2026-10-01\",\n  \"status\": \"DRAFT\",\n  \"title\": \"Too late\",\n  \"targetAmount\": 1000,\n  \"saver\": {\n    \"id\": \"0a9b4810-aa83-443c-b2f3-37ef2bb3d187\"\n  },\n  \"coach\": {\n    \"id\": \"338bdb54-0022-4d8f-a52e-e2deb37e836a\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "D1 coach busy",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/savings-goals/save",
+        "description": "D1 error. 409 Coach already has a savings goal due on that date. Eric already has Invest starter on 2026-11-01.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetDate\": \"2026-11-01\",\n  \"status\": \"DRAFT\",\n  \"title\": \"Same day\",\n  \"targetAmount\": 1000,\n  \"saver\": {\n    \"id\": \"0a9b4810-aa83-443c-b2f3-37ef2bb3d187\"\n  },\n  \"coach\": {\n    \"id\": \"ab9e0fc1-bfcb-4bac-bd29-ce914ec95ccb\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "D2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/bc176c00-a5ec-4ec1-80cf-c3dc046043a0/status?status=ACTIVE",
+        "description": "D2 success. School fees is DRAFT, so this returns 200 Savings goal status updated successfully. Run the illegal request after this."
+      }
+    },
+    {
+      "name": "D2 illegal status",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/9b8cc735-fc67-4563-98c2-ff2b4844e470/status?status=DRAFT",
+        "description": "D2 error. 400 Cannot change status from ACHIEVED to DRAFT. Laptop fund stays ACHIEVED."
+      }
+    },
+    {
+      "name": "D2 missing goal",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/00000000-0000-0000-0000-000000000000/status?status=ACTIVE",
+        "description": "D2 error. 404 The savings goal with that id does not exist."
+      }
+    },
+    {
+      "name": "D2 put does not change status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/savings-goals/update/bc176c00-a5ec-4ec1-80cf-c3dc046043a0",
+        "description": "The general update ignores status. The response entity keeps the status already stored.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetDate\": \"2026-10-05\",\n  \"status\": \"ACHIEVED\",\n  \"title\": \"School fees\",\n  \"targetAmount\": 300000,\n  \"saver\": {\n    \"id\": \"0a9b4810-aa83-443c-b2f3-37ef2bb3d187\"\n  },\n  \"coach\": {\n    \"id\": \"338bdb54-0022-4d8f-a52e-e2deb37e836a\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "D3",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f/expertise-areas/8e013832-4b05-465f-813c-f172773357a5",
+        "description": "D3 success. 200 Expertise area added to the coach. Diane keeps Budgeting and gains Investing."
+      }
+    },
+    {
+      "name": "D3 already has area",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f/expertise-areas/3c5d8cd9-3019-4498-a2da-540b0ff1bbb4",
+        "description": "D3 error. 409 The coach already has that expertise area. Safe to run before D3, because Diane already holds Budgeting."
+      }
+    },
+    {
+      "name": "D3 missing coach",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/00000000-0000-0000-0000-000000000000/expertise-areas/8e013832-4b05-465f-813c-f172773357a5",
+        "description": "D3 error. 404 The coach with that id does not exist."
+      }
+    },
+    {
+      "name": "D4",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f/savings-circle?circleNumber=4",
+        "description": "D4 success. 200 Savings circle changed successfully. Circle 3 becomes free. Then run C2, then D4 move back."
+      }
+    },
+    {
+      "name": "D4 circle taken",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/338bdb54-0022-4d8f-a52e-e2deb37e836a/savings-circle?circleNumber=2",
+        "description": "D4 error. 409 That savings circle is taken by another coach. Eric already holds circle 2. Aline stays on circle 1."
+      }
+    },
+    {
+      "name": "D4 missing circle",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f/savings-circle?circleNumber=99",
+        "description": "D4 error. 404 The savings circle with that circleNumber does not exist."
+      }
+    },
+    {
+      "name": "D4 move back",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/coaches/2a68ab45-e9d0-4ea8-8f74-4f67738f9f3f/savings-circle?circleNumber=3",
+        "description": "Puts Diane back on circle 3 so C2 returns circle 4 again."
+      }
+    },
+    {
+      "name": "E1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/investments/save?savingsGoalId=9b8cc735-fc67-4563-98c2-ff2b4844e470",
+        "description": "E1 success. 201 Investment saved successfully. investedDate is set to today. Laptop fund is ACHIEVED.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"instrument\": \"Treasury bond\",\n  \"note\": \"Two year bond bought through BNR\",\n  \"amount\": 500000\n}"
+        }
+      }
+    },
+    {
+      "name": "E1 not achieved",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/investments/save?savingsGoalId=bc176c00-a5ec-4ec1-80cf-c3dc046043a0",
+        "description": "E1 error. 400 Investments are only for ACHIEVED savings goals.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"instrument\": \"Treasury bond\",\n  \"note\": \"Should be rejected\",\n  \"amount\": 1000\n}"
+        }
+      }
+    },
+    {
+      "name": "E1 missing goal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/investments/save?savingsGoalId=00000000-0000-0000-0000-000000000000",
+        "description": "E1 error. 404 The savings goal with that id does not exist.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"instrument\": \"Treasury bond\",\n  \"note\": \"Missing goal\",\n  \"amount\": 1000\n}"
+        }
+      }
+    },
+    {
+      "name": "E2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/investments/saver/jean_b",
+        "description": "E2. Jean's investments, newest invested date first."
+      }
+    },
+    {
+      "name": "E2 empty",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/investments/saver/emma_u",
+        "description": "E2 empty list. Emma has no achieved goal with an investment."
+      }
+    },
+    {
+      "name": "E3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/delete/9b8cc735-fc67-4563-98c2-ff2b4844e470",
+        "description": "E3 protection. 409 That savings goal has investments, delete them first. Laptop fund stays."
+      }
+    },
+    {
+      "name": "E3 delete investment",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/investments/delete/965d81a8-30f3-4072-9d4b-57d5f6d643b8",
+        "description": "E3 success. 200 Investment deleted successfully. This removes the Unit trust. Run E3 first so the 409 is still true."
+      }
+    },
+    {
+      "name": "E3 missing investment",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/investments/delete/00000000-0000-0000-0000-000000000000",
+        "description": "E3 error. 404 The investment with that id does not exist."
+      }
+    },
+    {
+      "name": "F1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/stats/by-status",
+        "description": "F1. One row per status that has goals, for example DRAFT 3, ACTIVE 3, ACHIEVED 2, ABANDONED 2."
+      }
+    },
+    {
+      "name": "F2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/cancel-day?coachId=338bdb54-0022-4d8f-a52e-e2deb37e836a&date=2026-10-20",
+        "description": "F2. Run this only for the F2 demo. Response is 2 savings goals cancelled. October challenge changes from ACTIVE to ABANDONED. Laptop fund on 2026-10-31 is ACHIEVED, so cancelling that date returns 0."
+      }
+    },
+    {
+      "name": "Bonus summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/dashboard/summary",
+        "description": "Bonus. savers, coaches, freeSavingsCircles, goalsDueToday, draft, investments. goalsDueToday is 1 only when today is 2026-10-31."
+      }
+    },
+    {
+      "name": "Bonus page",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/savings-goals/page?page=0&size=5&sort=targetDate,desc",
+        "description": "Bonus. Page of savings goals. totalElements is 10 and totalPages is 2 before any extra goals are added."
+      }
+    }
+  ]
+}
