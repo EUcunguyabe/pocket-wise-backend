@@ -23,6 +23,5 @@ The API starts at http://localhost:8080. There is no home page. Try:
 
 http://localhost:8080/api/savers/all
 
-For the demo, import `pocket-wise-midterm.postman_collection.json`. Each request is named with its requirement id, such as A2, B1, or D2.
 
 The savers, coaches, goals, and investments used in class are already saved in the database.
